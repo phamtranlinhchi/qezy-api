@@ -4,7 +4,6 @@ import userController from '../controllers/user.controller';
 
 export const userRouter: Router = express.Router();
 
-// /api/user/
-userRouter.get('/', auth, userController.getUser);
-userRouter.post('/login', auth, userController.login);
-userRouter.get('/users', auth, userController.getUsersByRole);
+// /api/users/
+userRouter.get('/all', auth, userController.getAllUsers);
+userRouter.get('/', auth, userController.getUsers);

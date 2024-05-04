@@ -1,7 +1,9 @@
 import express, { Router } from 'express';
 // import { authRouter } from "./auth.route";
-import { jobRouter } from './job.route';
 import { userRouter } from './user.route';
+import { examRouter } from './exam.route';
+import { questionRouter } from './question.route';
+import { examResultRouter } from './examResult.route';
 
 const routers: Router = express.Router();
 
@@ -11,12 +13,20 @@ const defaultRoutes = [
   //   router: authRouter
   // },
   {
-    path: '/jobs',
-    router: jobRouter,
+    path: '/users',
+    router: userRouter,
   },
   {
-    path: '/user',
-    router: userRouter,
+    path: '/exams',
+    router: examRouter,
+  },
+  {
+    path: '/questions',
+    router: questionRouter,
+  },
+  {
+    path: '/results',
+    router: examResultRouter,
   },
 ];
 

@@ -1,40 +1,33 @@
-import { User } from '../models/user.model';
+import { FilterQuery, PaginateOptions } from 'mongoose';
+import { IUser, User } from '../models/user.model';
 import { v4 as uuid } from 'uuid';
+import { pick } from '../helpers/pick';
 
-const login = async (
-  email: string,
-  name: string,
-  role: string,
-  avatar: string
-) => {
-  const existedUser = await User.findOne({ email: email });
-  const newUser = await User.create({
-    id: uuid(),
-    email,
-    name,
-    role,
-    avatar,
-  });
-
-  return newUser;
-};
-
-const getUser = async (email: string) => {
-  const user = await User.findOne({ email });
-  if (!user) {
-    console.log('Can not find user!');
-  }
-
-  return user;
-};
-
-const getUsersByRole = async (role: string) => {
-  const users = await User.find({ role });
+const getAllUsers = async () => {
+  const users = await User.find();
   return users;
 };
 
+type IUserQuery = FilterQuery<IUser> & PaginateOptions;
+
+const queryUsers = async (userQuery: IUserQuery) => {
+  const filters = { ...userQuery };
+  delete filters.page;
+  delete filters.limit;
+
+  for (const key in filters) {
+    if (Object.prototype.hasOwnProperty.call(filters, key)) {
+      const value = filters[key];
+      filters[key] = decodeURIComponent(value);
+    }
+  }
+
+  const options = pick(userQuery, ['page', 'limit']);
+  const result = await User.paginate(filters, options);
+  return result;
+};
+
 export default {
-  login,
-  getUser,
-  getUsersByRole,
+  getAllUsers,
+  queryUsers,
 };
