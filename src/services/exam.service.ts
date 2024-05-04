@@ -7,6 +7,11 @@ const getAllExams = async () => {
   return exams;
 };
 
+const getExamById = async (id: string) => {
+  const exam = await Exam.findById(id).populate('Question');
+  return exam;
+};
+
 type IExamQuery = FilterQuery<IExam> & PaginateOptions;
 
 const queryExams = async (examQuery: IExamQuery) => {
@@ -28,5 +33,6 @@ const queryExams = async (examQuery: IExamQuery) => {
 
 export default {
   getAllExams,
+  getExamById,
   queryExams,
 };

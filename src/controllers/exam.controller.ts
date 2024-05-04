@@ -9,6 +9,13 @@ const getAllExams = catchAsync(async (req: Request, res: Response) => {
   return res.status(HttpStatusCode.Ok).json(exams);
 });
 
+// [GET] /exams/:id
+const getExamById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const exam = await examService.getExamById(id);
+  return res.status(HttpStatusCode.Ok).json(exam);
+});
+
 // [GET] /exams
 const getExams = catchAsync(async (req: Request, res: Response) => {
   const result = await examService.queryExams(req.query);
@@ -17,5 +24,6 @@ const getExams = catchAsync(async (req: Request, res: Response) => {
 
 export default {
   getAllExams,
+  getExamById,
   getExams,
 };
