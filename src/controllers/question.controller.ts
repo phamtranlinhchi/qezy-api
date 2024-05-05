@@ -15,7 +15,33 @@ const getQuestions = catchAsync(async (req: Request, res: Response) => {
   return res.status(HttpStatusCode.Ok).json(result);
 });
 
+// [POST] /questions
+const createQuestion = catchAsync(async (req: Request, res: Response) => {
+  const question = await questionService.createQuestion({
+    ...req.body,
+    creator: req.currentUser,
+  });
+  return res.status(HttpStatusCode.Ok).json(question);
+});
+
+// [PATCH] /questions/:id
+const updateQuestion = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const question = await questionService.updateQuestionById(id, req.body);
+  return res.status(HttpStatusCode.Ok).json(question);
+});
+
+// [DELETE] /questions/:id
+const deleteQuestion = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const question = await questionService.deleteQuestionById(id);
+  return res.status(HttpStatusCode.Ok).json(question);
+});
+
 export default {
   getAllQuestions,
   getQuestions,
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
 };

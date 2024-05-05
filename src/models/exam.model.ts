@@ -32,7 +32,7 @@ const examSchema: Schema = new mongoose.Schema(
     },
     questions: {
       type: Array<{
-        questionId: { type: mongoose.Types.ObjectId };
+        questionId: { type: mongoose.Types.ObjectId; ref: 'Question' };
         point: { type: Number; default: 0 };
       }>,
       default: [],

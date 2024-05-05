@@ -6,6 +6,7 @@ import catchAsync from '../helpers/catchAsync';
 import logger from '../helpers/logger';
 import tokenService from '../services/token.service';
 import examService from '../services/exam.service';
+import questionService from '../services/question.service';
 
 export const auth = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -28,24 +29,22 @@ export const auth = catchAsync(
 
 export const authorizeCreator = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { id: examId } = req.params;
-      const exam = await examService.getExamById(examId);
+    const match = req.originalUrl.match(/\/api\/(\w+)/);
+    if (match) {
+      const type = match[1];
+      const { id } = req.params;
+      const existeObj =
+        type === 'exams'
+          ? await examService.getExamById(id)
+          : await questionService.getQuestionById(id);
 
-      if (!exam) {
-        throw new ApiError(HttpStatusCode.BadRequest, 'Invalid exam');
-      } else if (req.currentUser === exam?.creator.toString()) return next();
+      if (!existeObj) {
+        throw new ApiError(HttpStatusCode.BadRequest, 'Invalid obj');
+      } else if (req.currentUser === existeObj?.creator.toString())
+        return next();
       else {
-        throw new ApiError(
-          HttpStatusCode.Unauthorized,
-          'Not the creator of the exam'
-        );
+        throw new ApiError(HttpStatusCode.Unauthorized, 'Not the creator');
       }
-    } catch (err) {
-      throw new ApiError(
-        HttpStatusCode.Unauthorized,
-        'Cannot authorize creator'
-      );
     }
   }
 );

@@ -27,6 +27,7 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
   const exam = await examService.createExam({
     ...req.body,
     creator: req.currentUser,
+    questions: [],
   });
   return res.status(HttpStatusCode.Ok).json(exam);
 });
@@ -34,7 +35,11 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
 // [PATCH] /exams/:id
 const updateExam = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const exam = await examService.updateExamById(id, req.body);
+  const exam = await examService.updateExamById(id, {
+    ...req.body,
+    creator: req.currentUser,
+    questions: [],
+  });
   return res.status(HttpStatusCode.Ok).json(exam);
 });
 

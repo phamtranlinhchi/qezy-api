@@ -3,7 +3,7 @@ import { Exam, IExam } from '../models/exam.model';
 import { pick } from '../helpers/pick';
 
 const getAllExams = async () => {
-  const exams = await Exam.find();
+  const exams = await Exam.find().populate('questions.questionId');
   return exams;
 };
 
@@ -31,7 +31,10 @@ const queryExams = async (examQuery: IExamQuery) => {
   }
 
   const options = pick(examQuery, ['page', 'limit']);
-  const result = await Exam.paginate(filters, options);
+  const result = await Exam.paginate(filters, {
+    ...options,
+    populate: ['questions.questionId'],
+  });
   return result;
 };
 

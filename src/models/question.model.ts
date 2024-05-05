@@ -7,15 +7,16 @@ interface IAnswer {
 }
 
 export interface IQuestion extends Document {
-  examId?: mongoose.Types.ObjectId[];
+  examIds?: mongoose.Types.ObjectId[];
   type: 'checkbox' | 'radio' | 'short' | 'long';
   quest: string;
   answers: IAnswer[];
+  creator: mongoose.Types.ObjectId;
 }
 
 const questionSchema: Schema = new mongoose.Schema(
   {
-    examId: {
+    examIds: {
       type: Array<mongoose.Schema.Types.ObjectId>,
       default: [],
     },
@@ -32,8 +33,13 @@ const questionSchema: Schema = new mongoose.Schema(
     answers: {
       type: Array<{
         answer: { type: String | Number };
-        isTrue: { type: Boolean; default: false };
+        isTrue: { type: Boolean; required: true };
       }>,
+      required: true,
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
   },
