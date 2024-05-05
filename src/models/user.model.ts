@@ -7,6 +7,7 @@ export interface IUser extends Document {
   password: string;
   fullName: string;
   age?: string;
+  role?: string;
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -27,6 +28,11 @@ const userSchema: Schema = new mongoose.Schema({
     required: true,
   },
   age: Number,
+  role: {
+    type: String,
+    enum: ['admin', 'user'],
+    default: 'user',
+  },
 });
 
 userSchema.plugin(paginate);
