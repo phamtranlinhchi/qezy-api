@@ -16,7 +16,23 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
   return res.status(HttpStatusCode.Ok).json(result);
 });
 
+// [PATCH] /users/:id
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = await userService.updateUserById(id, req.body);
+  return res.status(HttpStatusCode.Ok).json(user);
+});
+
+// [DELETE] /users/:id
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = await userService.deleteUserById(id);
+  return res.status(HttpStatusCode.Ok).json(user);
+});
+
 export default {
   getAllUsers,
   getUsers,
+  updateUser,
+  deleteUser,
 };

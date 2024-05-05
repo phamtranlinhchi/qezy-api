@@ -39,8 +39,22 @@ const createUser = async (userBody: IUser) => {
   }
 };
 
+const updateUserById = async (id: string, user: any) => {
+  delete user.password;
+  delete user.username;
+  const oldUser = await User.findByIdAndUpdate(id, user);
+  return oldUser;
+};
+
+const deleteUserById = async (id: string) => {
+  const deletedUser = await User.findByIdAndDelete(id);
+  return deletedUser;
+};
+
 export default {
   getAllUsers,
   queryUsers,
   createUser,
+  updateUserById,
+  deleteUserById,
 };

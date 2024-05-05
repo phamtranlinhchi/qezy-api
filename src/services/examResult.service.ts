@@ -26,7 +26,25 @@ const queryExamResults = async (examResultQuery: IExamResultQuery) => {
   return result;
 };
 
+const createExamResult = async (examResult: IExamResult) => {
+  const newExamResult = await ExamResult.create(examResult);
+  return newExamResult;
+};
+
+const updateExamResultById = async (id: string, examResult: IExamResult) => {
+  const oldExamResult = await ExamResult.findByIdAndUpdate(id, examResult);
+  return oldExamResult;
+};
+
+const deleteExamResultById = async (id: string) => {
+  const deletedExamResult = await ExamResult.findByIdAndDelete(id);
+  return deletedExamResult;
+};
+
 export default {
   getAllExamResults,
   queryExamResults,
+  createExamResult,
+  updateExamResultById,
+  deleteExamResultById,
 };

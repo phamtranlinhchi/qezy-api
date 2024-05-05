@@ -3,8 +3,9 @@ import paginate from 'mongoose-paginate-v2';
 
 export interface IExamResult extends Document {
   examId: mongoose.Types.ObjectId;
-  userId: mongoose.Types.ObjectId;
-  score: number;
+  answerIds?: string[];
+  candidate: mongoose.Types.ObjectId;
+  score?: number;
   startTime: Date;
   endTime: Date;
 }
@@ -16,7 +17,14 @@ const examResultSchema: Schema = new mongoose.Schema(
       ref: 'Exam',
       required: true,
     },
-    userId: {
+    answerIds: {
+      type: [
+        {
+          type: String,
+        },
+      ],
+    },
+    candidate: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -25,8 +33,14 @@ const examResultSchema: Schema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    startTime: Date,
-    endTime: Date,
+    startTime: {
+      type: Date,
+      required: true,
+    },
+    endTime: {
+      type: Date,
+      required: true,
+    },
   },
   {
     timestamps: true,

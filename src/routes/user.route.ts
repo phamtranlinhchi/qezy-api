@@ -8,3 +8,7 @@ export const userRouter: Router = express.Router();
 
 userRouter.get('/all', auth, userController.getAllUsers);
 userRouter.get('/', auth, userController.getUsers);
+
+userRouter.patch('/:id', auth, userController.updateUser);
+
+userRouter.delete('/:id', auth, userController.deleteUser);
