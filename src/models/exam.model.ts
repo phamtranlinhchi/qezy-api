@@ -31,10 +31,16 @@ const examSchema: Schema = new mongoose.Schema(
       required: true,
     },
     questions: {
-      type: Array<{
-        questionId: { type: mongoose.Types.ObjectId; ref: 'Question' };
-        point: { type: Number; default: 0 };
-      }>,
+      type: [
+        {
+          questionId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question',
+            required: true,
+          },
+          point: { type: Number, default: 0 },
+        },
+      ],
       default: [],
     },
     startTime: Date,

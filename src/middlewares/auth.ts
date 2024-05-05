@@ -39,7 +39,7 @@ export const authorizeCreator = catchAsync(
           : await questionService.getQuestionById(id);
 
       if (!existeObj) {
-        throw new ApiError(HttpStatusCode.BadRequest, 'Invalid obj');
+        throw new ApiError(HttpStatusCode.BadRequest, 'Invalid id');
       } else if (req.currentUser === existeObj?.creator.toString())
         return next();
       else {

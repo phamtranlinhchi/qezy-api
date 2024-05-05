@@ -27,7 +27,6 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
   const exam = await examService.createExam({
     ...req.body,
     creator: req.currentUser,
-    questions: [],
   });
   return res.status(HttpStatusCode.Ok).json(exam);
 });
@@ -38,7 +37,6 @@ const updateExam = catchAsync(async (req: Request, res: Response) => {
   const exam = await examService.updateExamById(id, {
     ...req.body,
     creator: req.currentUser,
-    questions: [],
   });
   return res.status(HttpStatusCode.Ok).json(exam);
 });

@@ -17,7 +17,7 @@ export interface IQuestion extends Document {
 const questionSchema: Schema = new mongoose.Schema(
   {
     examIds: {
-      type: Array<mongoose.Schema.Types.ObjectId>,
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Exam' }],
       default: [],
     },
     type: {
@@ -31,10 +31,12 @@ const questionSchema: Schema = new mongoose.Schema(
       trim: true,
     },
     answers: {
-      type: Array<{
-        answer: { type: String | Number };
-        isTrue: { type: Boolean; required: true };
-      }>,
+      type: [
+        {
+          answer: { type: Schema.Types.Mixed },
+          isTrue: { type: Boolean, required: true },
+        },
+      ],
       required: true,
     },
     creator: {

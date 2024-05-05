@@ -2,6 +2,7 @@ import { FilterQuery, PaginateOptions } from 'mongoose';
 import { Question, IQuestion } from '../models/question.model';
 import { pick } from '../helpers/pick';
 import { Exam } from '../models/exam.model';
+import { ObjectId } from 'mongodb';
 
 const getAllQuestions = async () => {
   const questions = await Question.find();
@@ -37,12 +38,20 @@ const queryQuestions = async (questionQuery: IQuestionQuery) => {
 };
 
 const createQuestion = async (question: IQuestion) => {
-  const newQuest = await Question.create(question);
+  const newQuest = await Question.create({
+    ...question,
+    examIds: question.examIds?.map((examId) => new ObjectId(examId)),
+  });
+
   if (question.examIds && question.examIds?.length > 0) {
     // Add question id to exam
     const exams = await Exam.updateMany(
       { _id: { $in: question.examIds } },
-      { $push: { questions: { questionId: newQuest.id, point: 0 } } }
+      {
+        $push: {
+          questions: { questionId: new ObjectId(newQuest._id), point: 0 },
+        },
+      }
     );
   }
   return newQuest;
@@ -50,20 +59,34 @@ const createQuestion = async (question: IQuestion) => {
 
 const updateQuestionById = async (id: string, question: IQuestion) => {
   const oldQuestion = await Question.findByIdAndUpdate(id, question);
-  if (question.examIds && question.examIds?.length > 0) {
-    // Need to update exam when updating question
-    // TODO
-    const exams = await Exam.updateMany(
+  if (question.examIds) {
+    const examsWithOldQuestion = await Exam.updateMany(
       { _id: { $in: oldQuestion?.examIds } },
-      { $pullAll: { questions: { questionId: oldQuestion?.id } } }
+      { $pull: { questions: { questionId: oldQuestion?._id } } }
     );
+    const examsWithUpdatedQuest = await Exam.updateMany(
+      { _id: { $in: question.examIds } },
+      { $push: { questions: { questionId: new ObjectId(id), point: 0 } } }
+    );
+    return {
+      oldQuestion,
+      removedQuestionExamsCount: examsWithOldQuestion.modifiedCount,
+      updatedQuestionExamsCount: examsWithUpdatedQuest.modifiedCount,
+    };
   }
-  return oldQuestion;
+  return { oldQuestion };
 };
 
 const deleteQuestionById = async (id: string) => {
-  const question = await Question.findByIdAndDelete(id);
-  return question;
+  const deletedQuestion = await Question.findByIdAndDelete(id);
+  const examsWithDeletedQuestion = await Exam.updateMany(
+    { _id: { $in: deletedQuestion?.examIds } },
+    { $pull: { questions: { questionId: deletedQuestion?._id } } }
+  );
+  return {
+    deletedQuestion,
+    examsWithDeletedQuestionCount: examsWithDeletedQuestion.modifiedCount,
+  };
 };
 
 export default {
