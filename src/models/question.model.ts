@@ -7,6 +7,7 @@ interface IAnswer {
 }
 
 export interface IQuestion extends Document {
+  examId?: mongoose.Types.ObjectId[];
   type: 'checkbox' | 'radio' | 'short' | 'long';
   quest: string;
   answers: IAnswer[];
@@ -14,6 +15,10 @@ export interface IQuestion extends Document {
 
 const questionSchema: Schema = new mongoose.Schema(
   {
+    examId: {
+      type: Array<mongoose.Schema.Types.ObjectId>,
+      default: [],
+    },
     type: {
       type: String,
       required: true,

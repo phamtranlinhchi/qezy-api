@@ -3,8 +3,6 @@ import moment from 'moment';
 
 import vars from '../config/vars';
 import { Token } from '../models/token.model';
-import { ApiError } from '../middlewares/error';
-import { HttpStatusCode } from 'axios';
 import { User } from '../models/user.model';
 
 const generateToken = (

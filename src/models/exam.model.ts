@@ -23,6 +23,7 @@ const examSchema: Schema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,6 +35,7 @@ const examSchema: Schema = new mongoose.Schema(
         questionId: { type: mongoose.Types.ObjectId };
         point: { type: Number; default: 0 };
       }>,
+      default: [],
     },
     startTime: Date,
     endTime: Date,

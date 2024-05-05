@@ -22,8 +22,34 @@ const getExams = catchAsync(async (req: Request, res: Response) => {
   return res.status(HttpStatusCode.Ok).json(result);
 });
 
+// [POST] /exams
+const createExam = catchAsync(async (req: Request, res: Response) => {
+  const exam = await examService.createExam({
+    ...req.body,
+    creator: req.currentUser,
+  });
+  return res.status(HttpStatusCode.Ok).json(exam);
+});
+
+// [PATCH] /exams/:id
+const updateExam = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const exam = await examService.updateExamById(id, req.body);
+  return res.status(HttpStatusCode.Ok).json(exam);
+});
+
+// [DELETE] /exams/:id
+const deleteExam = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const exam = await examService.deleteExamById(id);
+  return res.status(HttpStatusCode.Ok).json(exam);
+});
+
 export default {
   getAllExams,
   getExamById,
   getExams,
+  createExam,
+  updateExam,
+  deleteExam,
 };
