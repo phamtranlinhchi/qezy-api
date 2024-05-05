@@ -2,6 +2,8 @@ import { FilterQuery, PaginateOptions } from 'mongoose';
 import { IUser, User } from '../models/user.model';
 import { v4 as uuid } from 'uuid';
 import { pick } from '../helpers/pick';
+import { ApiError } from '../middlewares/error';
+import { HttpStatusCode } from 'axios';
 
 const getAllUsers = async () => {
   const users = await User.find();
@@ -27,7 +29,18 @@ const queryUsers = async (userQuery: IUserQuery) => {
   return result;
 };
 
+const createUser = async (userBody: IUser) => {
+  if (await User.findOne({ username: userBody.username })) {
+    throw new ApiError(HttpStatusCode.BadRequest, 'Existed username');
+  }
+
+  if (userBody) {
+    return User.create(userBody);
+  }
+};
+
 export default {
   getAllUsers,
   queryUsers,
+  createUser,
 };

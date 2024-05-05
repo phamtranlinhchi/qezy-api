@@ -1,6 +1,7 @@
-// import express, { Router } from "express";
-// // import authController from "../controllers/auth.controller";
-// export const authRouter: Router = express.Router();
+import express, { Router } from 'express';
+import authController from '../controllers/auth.controller';
+export const authRouter: Router = express.Router();
 
-// authRouter.post("/signin", authController.login);
-// authRouter.post("/signup", authController.register);
+// /api/auth
+authRouter.post('/login', authController.login);
+authRouter.post('/register', authController.register);

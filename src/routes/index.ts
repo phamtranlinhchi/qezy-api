@@ -4,14 +4,15 @@ import { userRouter } from './user.route';
 import { examRouter } from './exam.route';
 import { questionRouter } from './question.route';
 import { examResultRouter } from './examResult.route';
+import { authRouter } from './auth.route';
 
 const routers: Router = express.Router();
 
 const defaultRoutes = [
-  // {
-  //   path: "/users",
-  //   router: authRouter
-  // },
+  {
+    path: '/auth',
+    router: authRouter,
+  },
   {
     path: '/users',
     router: userRouter,
