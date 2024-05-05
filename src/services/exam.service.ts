@@ -2,6 +2,7 @@ import mongoose, { FilterQuery, PaginateOptions } from 'mongoose';
 import { Exam, IExam } from '../models/exam.model';
 import { pick } from '../helpers/pick';
 import { Question } from '../models/question.model';
+import { ObjectId } from 'mongodb';
 
 const getAllExams = async () => {
   const exams = await Exam.find().populate('questions.questionId');
@@ -68,14 +69,14 @@ const updateExamById = async (id: string, exam: IExam) => {
       },
       { $pull: { examIds: oldExam?._id } }
     );
-    const questionsWithUpdatedExam = await Exam.updateMany(
+    const questionsWithUpdatedExam = await Question.updateMany(
       { _id: { $in: exam.questions.map((question) => question.questionId) } },
-      { $push: { examIds: id } }
+      { $push: { examIds: new ObjectId(id) } }
     );
     return {
       oldExam,
-      questionsWithOldExam,
-      questionsWithUpdatedExam,
+      questionsWithOldExamCount: questionsWithOldExam.modifiedCount,
+      questionsWithUpdatedExamCount: questionsWithUpdatedExam.modifiedCount,
     };
   }
   return oldExam;
