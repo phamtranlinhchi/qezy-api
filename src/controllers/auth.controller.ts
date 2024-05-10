@@ -20,8 +20,8 @@ const login = catchAsync(async (req: Request, res: Response) => {
       .json({ accessToken, message: 'Login successfull' });
   }
   return res
-    .status(HttpStatusCode.BadRequest)
-    .json({ message: 'Login failed' });
+    .status(HttpStatusCode.Unauthorized)
+    .json({ message: 'Username or password is incorrect!' });
 });
 
 // [POST] /auth/register
