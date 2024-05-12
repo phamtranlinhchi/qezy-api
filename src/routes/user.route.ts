@@ -7,6 +7,8 @@ export const userRouter: Router = express.Router();
 // /api/users/
 
 userRouter.get('/all', auth, userController.getAllUsers);
+userRouter.get('/current', auth, userController.getCurrentUser);
+userRouter.get('/:id', auth, userController.getUserById);
 userRouter.get('/', auth, userController.getUsers);
 
 userRouter.patch('/:id', auth, userController.updateUser);

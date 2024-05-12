@@ -28,13 +28,22 @@ const queryQuestions = async (questionQuery: IQuestionQuery) => {
 
   for (const key in filters) {
     if (Object.prototype.hasOwnProperty.call(filters, key)) {
-      const value = filters[key];
-      filters[key] = decodeURIComponent(value);
+      if (key === "search") {
+        filters["quest"] = { $regex: filters[key].trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: "i" }
+        delete filters[key]
+      }
+      else {
+        const value = filters[key];
+        filters[key] = decodeURIComponent(value);
+      }
     }
   }
 
   const options = pick(questionQuery, ['page', 'limit']);
-  const result = await Question.paginate(filters, options);
+  const result = await Question.paginate(filters, {
+    ...options, sort: { createdAt: "desc" },
+    populate: ['examIds'],
+  });
   return result;
 };
 

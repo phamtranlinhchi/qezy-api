@@ -29,6 +29,15 @@ const queryUsers = async (userQuery: IUserQuery) => {
   return result;
 };
 
+const getUserById = async (id: string) => {
+  try {
+    const user = await User.findById(id)
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const createUser = async (userBody: IUser) => {
   if (await User.findOne({ username: userBody.username })) {
     throw new ApiError(HttpStatusCode.BadRequest, 'Existed username');
@@ -54,6 +63,7 @@ const deleteUserById = async (id: string) => {
 export default {
   getAllUsers,
   queryUsers,
+  getUserById,
   createUser,
   updateUserById,
   deleteUserById,

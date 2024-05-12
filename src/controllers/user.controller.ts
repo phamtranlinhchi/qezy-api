@@ -16,6 +16,19 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
   return res.status(HttpStatusCode.Ok).json(result);
 });
 
+// [GET] /users/current
+const getCurrentUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.queryUsers({ _id: req.currentUser });
+  return res.status(HttpStatusCode.Ok).json(result.docs[0]);
+});
+
+// [GET] /users/:id
+const getUserById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await userService.getUserById(id);
+  return res.status(HttpStatusCode.Ok).json(result);
+});
+
 // [PATCH] /users/:id
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -33,6 +46,8 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 export default {
   getAllUsers,
   getUsers,
+  getCurrentUser,
+  getUserById,
   updateUser,
   deleteUser,
 };
