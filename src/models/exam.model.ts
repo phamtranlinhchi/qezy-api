@@ -23,7 +23,6 @@ const examSchema: Schema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,

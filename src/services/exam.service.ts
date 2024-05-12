@@ -30,8 +30,14 @@ const queryExams = async (examQuery: IExamQuery) => {
 
   for (const key in filters) {
     if (Object.prototype.hasOwnProperty.call(filters, key)) {
-      const value = filters[key];
-      filters[key] = decodeURIComponent(value);
+      if (key === "search") {
+        filters["examTitle"] = { $regex: filters[key].trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: "i" }
+        delete filters[key]
+      }
+      else {
+        const value = filters[key];
+        filters[key] = decodeURIComponent(value);
+      }
     }
   }
 

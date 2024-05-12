@@ -10,8 +10,8 @@ const getAllQuestions = catchAsync(async (req: Request, res: Response) => {
 });
 
 // [GET] /questions
-const getQuestions = catchAsync(async (req: Request, res: Response) => {
-  const result = await questionService.queryQuestions(req.query);
+const getQuestionsByCurrentUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await questionService.queryQuestions({ ...req.query, creator: req.currentUser });
   return res.status(HttpStatusCode.Ok).json(result);
 });
 
@@ -40,7 +40,7 @@ const deleteQuestion = catchAsync(async (req: Request, res: Response) => {
 
 export default {
   getAllQuestions,
-  getQuestions,
+  getQuestions: getQuestionsByCurrentUser,
   createQuestion,
   updateQuestion,
   deleteQuestion,

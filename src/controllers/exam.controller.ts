@@ -17,8 +17,9 @@ const getExamById = catchAsync(async (req: Request, res: Response) => {
 });
 
 // [GET] /exams
-const getExams = catchAsync(async (req: Request, res: Response) => {
-  const result = await examService.queryExams(req.query);
+const getExamsByCurrentUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await examService.queryExams({ ...req.query, creator: req.currentUser });
+
   return res.status(HttpStatusCode.Ok).json(result);
 });
 
@@ -51,7 +52,7 @@ const deleteExam = catchAsync(async (req: Request, res: Response) => {
 export default {
   getAllExams,
   getExamById,
-  getExams,
+  getExams: getExamsByCurrentUser,
   createExam,
   updateExam,
   deleteExam,

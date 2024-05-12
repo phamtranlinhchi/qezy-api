@@ -3,6 +3,7 @@ import { Question, IQuestion } from '../models/question.model';
 import { pick } from '../helpers/pick';
 import { Exam } from '../models/exam.model';
 import { ObjectId } from 'mongodb';
+import examService from "./exam.service";
 
 const getAllQuestions = async () => {
   const questions = await Question.find();
@@ -40,7 +41,7 @@ const queryQuestions = async (questionQuery: IQuestionQuery) => {
 const createQuestion = async (question: IQuestion) => {
   const newQuest = await Question.create({
     ...question,
-    examIds: question.examIds?.map((examId) => new ObjectId(examId)),
+    examIds: question.examIds?.map(async (examId) => await examService.getExamById(examId.toString()) ? new ObjectId(examId) : null),
   });
 
   if (question.examIds && question.examIds?.length > 0) {
