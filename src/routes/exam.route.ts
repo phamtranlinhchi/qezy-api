@@ -1,17 +1,21 @@
 import express, { Router } from 'express';
-import { auth, authorizeCreator } from '../middlewares/auth';
+import { auth, authorizeCreator, isAdmin } from '../middlewares/auth';
 import examController from '../controllers/exam.controller';
 
 export const examRouter: Router = express.Router();
 
 // /api/exams/
 
-examRouter.get('/all', auth, examController.getAllExams);
-examRouter.get('/:id', auth, examController.getExamById);
-examRouter.get('/', auth, examController.getExams);
+examRouter.get('/all', auth, isAdmin, examController.getAllExams);
+examRouter.get('/:id', auth, isAdmin, examController.getExamById);
+examRouter.get('/', auth, isAdmin, examController.getExams);
 
-examRouter.post('/', auth, examController.createExam);
+examRouter.post('/', auth, isAdmin, examController.createExam);
 
-examRouter.patch('/:id', auth, authorizeCreator, examController.updateExam);
+examRouter.patch('/:id', auth, isAdmin,
+  // authorizeCreator,
+  examController.updateExam);
 
-examRouter.delete('/:id', auth, authorizeCreator, examController.deleteExam);
+examRouter.delete('/:id', auth, isAdmin,
+  // authorizeCreator,
+  examController.deleteExam);

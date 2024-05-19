@@ -7,6 +7,7 @@ import logger from '../helpers/logger';
 import tokenService from '../services/token.service';
 import examService from '../services/exam.service';
 import questionService from '../services/question.service';
+import userService from "../services/user.service";
 
 export const auth = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +27,19 @@ export const auth = catchAsync(
     }
   }
 );
+
+export const isAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.currentUser)
+    return next(
+      new ApiError(HttpStatusCode.Unauthorized, 'No access token found')
+    );
+  const user = await userService.getUserById(req.currentUser);
+  if (user?.role === "admin")
+    return next();
+  return next(
+    new ApiError(HttpStatusCode.Unauthorized, 'Not admin')
+  );
+});
 
 export const authorizeCreator = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

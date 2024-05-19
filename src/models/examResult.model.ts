@@ -17,10 +17,10 @@ const examResultSchema: Schema = new mongoose.Schema(
       ref: 'Exam',
       required: true,
     },
-    answerIds: {
+    answers: {
       type: [
         {
-          type: String,
+          type: mongoose.Schema.Types.Mixed,
         },
       ],
     },

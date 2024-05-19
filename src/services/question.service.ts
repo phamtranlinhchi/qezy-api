@@ -41,7 +41,7 @@ const queryQuestions = async (questionQuery: IQuestionQuery) => {
 
   const options = pick(questionQuery, ['page', 'limit']);
   const result = await Question.paginate(filters, {
-    ...options, sort: { createdAt: "desc" },
+    ...options, sort: { updatedAt: "desc" },
     populate: ['examIds'],
   });
   return result;

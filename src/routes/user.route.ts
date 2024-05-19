@@ -1,16 +1,16 @@
 import express, { Router } from 'express';
-import { auth } from '../middlewares/auth';
+import { auth, isAdmin } from '../middlewares/auth';
 import userController from '../controllers/user.controller';
 
 export const userRouter: Router = express.Router();
 
 // /api/users/
 
-userRouter.get('/all', auth, userController.getAllUsers);
+userRouter.get('/all', auth, isAdmin, userController.getAllUsers);
 userRouter.get('/current', auth, userController.getCurrentUser);
-userRouter.get('/:id', auth, userController.getUserById);
-userRouter.get('/', auth, userController.getUsers);
+userRouter.get('/:id', auth, isAdmin, userController.getUserById);
+userRouter.get('/', auth, isAdmin, userController.getUsers);
 
-userRouter.patch('/:id', auth, userController.updateUser);
+userRouter.patch('/:id', auth, isAdmin, userController.updateUser);
 
-userRouter.delete('/:id', auth, userController.deleteUser);
+userRouter.delete('/:id', auth, isAdmin, userController.deleteUser);

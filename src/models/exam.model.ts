@@ -42,6 +42,10 @@ const examSchema: Schema = new mongoose.Schema(
       ],
       default: [],
     },
+    // totalTimeInMinute: {
+    //   type: Number,
+    //   default: 10
+    // },
     startTime: Date,
     endTime: Date,
   },
