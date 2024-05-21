@@ -42,7 +42,7 @@ const queryQuestions = async (questionQuery: IQuestionQuery) => {
   const options = pick(questionQuery, ['page', 'limit']);
   const result = await Question.paginate(filters, {
     ...options, sort: { updatedAt: "desc" },
-    populate: ['examIds'],
+    populate: ['examIds', 'creator'],
   });
   return result;
 };

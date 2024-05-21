@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import catchAsync from '../helpers/catchAsync';
 import examService from '../services/exam.service';
+import questionService from "../services/question.service";
 
 // [GET] /exams/all
 const getAllExams = catchAsync(async (req: Request, res: Response) => {
@@ -28,9 +29,25 @@ const getExamsByCurrentUser = catchAsync(async (req: Request, res: Response) => 
 
 // [POST] /exams
 const createExam = catchAsync(async (req: Request, res: Response) => {
+  let { questions } = req.body;
+  const newQuestions = []
+  if (questions.length > 0) {
+    for await (const question of questions) {
+      if (question.questionId)
+        newQuestions.push(question);
+      else {
+        const newQuestion = await questionService.createQuestion({ ...question, creator: req.currentUser });
+        newQuestions.push({ questionId: newQuestion.id, point: question.point });
+      }
+    }
+  }
+
+  console.log(newQuestions);
+
   const exam = await examService.createExam({
     ...req.body,
-    // creator: req.currentUser,
+    questions: newQuestions,
+    creator: req.currentUser,
   });
   return res.status(HttpStatusCode.Ok).json(exam);
 });
@@ -38,9 +55,10 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
 // [PATCH] /exams/:id
 const updateExam = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
+  delete req.body.creator;
+
   const exam = await examService.updateExamById(id, {
     ...req.body,
-    // creator: req.currentUser,
   });
   return res.status(HttpStatusCode.Ok).json(exam);
 });

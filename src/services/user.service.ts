@@ -19,13 +19,22 @@ const queryUsers = async (userQuery: IUserQuery) => {
 
   for (const key in filters) {
     if (Object.prototype.hasOwnProperty.call(filters, key)) {
-      const value = filters[key];
-      filters[key] = decodeURIComponent(value);
+      if (key === "search") {
+        filters["username"] = { $regex: filters[key].trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: "i" }
+        delete filters[key]
+      }
+      else {
+        const value = filters[key];
+        filters[key] = decodeURIComponent(value);
+      }
     }
   }
 
   const options = pick(userQuery, ['page', 'limit']);
-  const result = await User.paginate(filters, options);
+  const result = await User.paginate(filters, {
+    ...options,
+    sort: { updatedAt: "desc" },
+  });
   return result;
 };
 
@@ -40,12 +49,12 @@ const getUserById = async (id: string) => {
 
 const createUser = async (userBody: IUser) => {
   if (await User.findOne({ username: userBody.username })) {
-    throw new ApiError(HttpStatusCode.BadRequest, 'Existed username');
+    return {
+      message: 'Existed username!',
+      success: false,
+    };
   }
-
-  if (userBody) {
-    return User.create(userBody);
-  }
+  return { user: await User.create(userBody), success: true };
 };
 
 const updateUserById = async (id: string, user: any) => {

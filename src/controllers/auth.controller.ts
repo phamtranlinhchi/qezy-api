@@ -27,7 +27,11 @@ const login = catchAsync(async (req: Request, res: Response) => {
 // [POST] /auth/register
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  res.status(HttpStatusCode.Created).json({ message: 'Register successfull' });
+  if (!(user as any)?.success)
+    return res
+      .status(HttpStatusCode.BadRequest)
+      .json({ message: (user as any)?.message });
+  res.status(HttpStatusCode.Ok).json({ message: 'Register successfull' });
 });
 export default {
   login,

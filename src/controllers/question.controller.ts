@@ -22,7 +22,7 @@ const getQuestionsByCurrentUser = catchAsync(async (req: Request, res: Response)
 const createQuestion = catchAsync(async (req: Request, res: Response) => {
   const question = await questionService.createQuestion({
     ...req.body,
-    // creator: req.currentUser,
+    creator: req.currentUser,
   });
   return res.status(HttpStatusCode.Ok).json(question);
 });
@@ -30,6 +30,8 @@ const createQuestion = catchAsync(async (req: Request, res: Response) => {
 // [PATCH] /questions/:id
 const updateQuestion = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
+  delete req.body.creator;
+
   const question = await questionService.updateQuestionById(id, req.body);
   return res.status(HttpStatusCode.Ok).json(question);
 });

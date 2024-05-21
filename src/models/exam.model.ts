@@ -13,6 +13,7 @@ export interface IExam extends Document {
   };
   creator: mongoose.Types.ObjectId;
   questions?: IExamQuestion[];
+  totalTimeInMinute?: number;
   startTime?: Date;
   endTime?: Date;
 }
@@ -42,10 +43,10 @@ const examSchema: Schema = new mongoose.Schema(
       ],
       default: [],
     },
-    // totalTimeInMinute: {
-    //   type: Number,
-    //   default: 10
-    // },
+    totalTimeInMinute: {
+      type: Number,
+      default: 10
+    },
     startTime: Date,
     endTime: Date,
   },

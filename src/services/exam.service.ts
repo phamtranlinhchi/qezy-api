@@ -45,7 +45,7 @@ const queryExams = async (examQuery: IExamQuery) => {
   const result = await Exam.paginate(filters, {
     ...options,
     sort: { updatedAt: "desc" },
-    populate: ['questions.questionId'],
+    populate: ['questions.questionId', 'creator'],
   });
   return result;
 };
