@@ -12,6 +12,7 @@ export interface IQuestion extends Document {
   quest: string;
   answers: IAnswer[];
   creator: mongoose.Types.ObjectId;
+  correctAnswer?: any
 }
 
 const questionSchema: Schema = new mongoose.Schema(

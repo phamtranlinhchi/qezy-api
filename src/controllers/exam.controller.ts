@@ -42,8 +42,6 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
     }
   }
 
-  console.log(newQuestions);
-
   const exam = await examService.createExam({
     ...req.body,
     questions: newQuestions,

@@ -48,6 +48,14 @@ const queryQuestions = async (questionQuery: IQuestionQuery) => {
 };
 
 const createQuestion = async (question: IQuestion) => {
+  if (question.correctAnswer) {
+
+    (question.answers as any) = question.answers.map((answer, index) =>
+      ({ answer, isTrue: index === Number(question.correctAnswer) - 1 })
+    );
+  }
+
+
   const newQuest = await Question.create({
     ...question,
     examIds: question.examIds?.map(async (examId) => await examService.getExamById(examId.toString()) ? new ObjectId(examId) : null),
