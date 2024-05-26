@@ -11,6 +11,6 @@ examResultRouter.get('/', auth, examResultController.getExamResults);
 
 examResultRouter.post('/', auth, examResultController.createExamResult);
 
-examResultRouter.patch('/:id', auth, examResultController.updateExamResult);
+examResultRouter.put('/:id', auth, examResultController.updateExamResult);
 
 examResultRouter.delete('/:id', auth, examResultController.deleteExamResult);

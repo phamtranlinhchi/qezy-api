@@ -13,6 +13,7 @@ const getAllQuestions = async () => {
 const getQuestionById = async (id: string) => {
   try {
     const question = await Question.findById(id);
+
     return question;
   } catch (err) {
     console.log(err);

@@ -4,6 +4,8 @@ import { v4 as uuid } from 'uuid';
 import { pick } from '../helpers/pick';
 import { ApiError } from '../middlewares/error';
 import { HttpStatusCode } from 'axios';
+import bcrypt from 'bcryptjs';
+
 
 const getAllUsers = async () => {
   const users = await User.find();
@@ -58,8 +60,12 @@ const createUser = async (userBody: IUser) => {
 };
 
 const updateUserById = async (id: string, user: any) => {
-  delete user.password;
   delete user.username;
+  if (user.password)
+    user.password = await bcrypt.hash(user.password as string, 10);
+  else
+    delete user.password;
+
   const oldUser = await User.findByIdAndUpdate(id, user);
   return oldUser;
 };

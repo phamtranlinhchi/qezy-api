@@ -11,6 +11,6 @@ userRouter.get('/current', auth, userController.getCurrentUser);
 userRouter.get('/:id', auth, isAdmin, userController.getUserById);
 userRouter.get('/', auth, isAdmin, userController.getUsers);
 
-userRouter.patch('/:id', auth, isAdmin, userController.updateUser);
+userRouter.put('/:id', auth, isAdmin, userController.updateUser);
 
 userRouter.delete('/:id', auth, isAdmin, userController.deleteUser);

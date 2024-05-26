@@ -12,7 +12,7 @@ examRouter.get('/', auth, isAdmin, examController.getExams);
 
 examRouter.post('/', auth, isAdmin, examController.createExam);
 
-examRouter.patch('/:id', auth, isAdmin,
+examRouter.put('/:id', auth, isAdmin,
   // authorizeCreator,
   examController.updateExam);
 
