@@ -30,6 +30,20 @@ const queryExamResults = async (examResultQuery: IExamResultQuery) => {
   return result;
 };
 
+const getResById = async (id: string) => {
+  try {
+    const examRes = await ExamResult.findById(id).populate({
+      path: "examId",
+      populate: {
+        path: "questions.questionId"
+      }
+    }).populate('candidate');
+    return examRes;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const createExamResult = async (examResult: IExamResult) => {
   const newExamResult = await ExamResult.create(examResult);
   return newExamResult;
@@ -48,6 +62,7 @@ const deleteExamResultById = async (id: string) => {
 export default {
   getAllExamResults,
   queryExamResults,
+  getResById,
   createExamResult,
   updateExamResultById,
   deleteExamResultById,

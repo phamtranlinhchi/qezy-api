@@ -8,6 +8,7 @@ export const examResultRouter: Router = express.Router();
 
 examResultRouter.get('/all', auth, examResultController.getAllExamResults);
 examResultRouter.get('/', auth, examResultController.getExamResults);
+examResultRouter.get('/:id', auth, examResultController.getExamResultById);
 
 examResultRouter.post('/', auth, examResultController.createExamResult);
 
