@@ -7,6 +7,7 @@ export const examRouter: Router = express.Router();
 // /api/exams/
 
 examRouter.get('/all', auth, isAdmin, examController.getAllExams);
+examRouter.get('/temp/:id', auth, isAdmin, examController.getExamTempById);
 examRouter.get('/:id', auth, isAdmin, examController.getExamById);
 examRouter.get('/', auth, isAdmin, examController.getExams);
 

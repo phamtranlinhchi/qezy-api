@@ -17,6 +17,59 @@ const getExamById = catchAsync(async (req: Request, res: Response) => {
   return res.status(HttpStatusCode.Ok).json(exam);
 });
 
+// [GET] /exams/temp/:id
+const getExamTempById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const exam: any = await examService.getExamById(id);
+  let newQuestions = [...exam.questions];
+  newQuestions = newQuestions.map((quest: any) => {
+    let correctAnswers;
+    quest.questionId.answers.forEach((a: any) => {
+      if (a.isTrue)
+        correctAnswers = [a.answer]
+    })
+    return {
+      question: quest.questionId.quest,
+      score: quest.point,
+      choices: quest.questionId.answers.map((a: any) => a.answer),
+      type: "MCQs",
+      correctAnswers
+    }
+  })
+
+  // "questions": [
+  //   {
+  //       "questionId": {
+  //           "_id": "66408536ff8ea6e6b351ae8b",
+  //           "examIds": [
+  //               "66409b457cbe605f31312599"
+  //           ],
+  //           "type": "radio",
+  //           "quest": "the first question is so longgggg so that I can test something",
+  //           "answers": [
+  //               {
+  //                   "answer": "correct answer",
+  //                   "isTrue": true,
+  //                   "_id": "6653787d0c2448cc7295c183"
+  //               },
+  //               {
+  //                   "answer": "wrong answer",
+  //                   "isTrue": false,
+  //                   "_id": "6653787d0c2448cc7295c184"
+  //               }
+  //           ],
+  //           "creator": "66374a6447881c2f10672945",
+  //           "createdAt": "2024-05-12T09:00:38.614Z",
+  //           "updatedAt": "2024-05-26T19:08:20.473Z",
+  //           "__v": 0
+  //       },
+  //       "point": 10,
+  //       "_id": "665388a40c2448cc7295e958"
+  //   },
+  // ]
+  return res.status(HttpStatusCode.Ok).json({ ...exam._doc, questions: newQuestions });
+});
+
 // [GET] /exams
 const getExamsByCurrentUser = catchAsync(async (req: Request, res: Response) => {
   const result = await examService.queryExams({
@@ -71,6 +124,7 @@ const deleteExam = catchAsync(async (req: Request, res: Response) => {
 export default {
   getAllExams,
   getExamById,
+  getExamTempById,
   getExams: getExamsByCurrentUser,
   createExam,
   updateExam,
