@@ -22,7 +22,11 @@ const queryExamResults = async (examResultQuery: IExamResultQuery) => {
   }
 
   const options = pick(examResultQuery, ['page', 'limit']);
-  const result = await ExamResult.paginate(filters, options);
+  const result = await ExamResult.paginate(filters, {
+    ...options,
+    sort: { updatedAt: "desc" },
+    populate: ['candidate', 'examId'],
+  });
   return result;
 };
 
